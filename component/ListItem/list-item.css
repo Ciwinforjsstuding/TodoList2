@@ -1,0 +1,9 @@
+.list-item{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    background: rgb(81, 216, 187);
+    /* border: 1px solid rgb(185, 182, 182); */
+}
