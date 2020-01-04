@@ -6,3 +6,11 @@ export const addTodoAction = (textTodo, id) => ({
         id
     }
 });
+
+export const changeTextToDoAction = (changeTextToDo, id) => ({
+    type: "CHANGE_TEXT_TODO",
+    payload: {
+        changeTextToDo,
+        id,
+    }
+})

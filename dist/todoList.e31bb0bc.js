@@ -35333,7 +35333,7 @@ module.hot.accept(reloadCSS);
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.addTodoAction = void 0;
+exports.changeTextToDoAction = exports.addTodoAction = void 0;
 
 var addTodoAction = function addTodoAction(textTodo, id) {
   return {
@@ -35347,6 +35347,18 @@ var addTodoAction = function addTodoAction(textTodo, id) {
 };
 
 exports.addTodoAction = addTodoAction;
+
+var changeTextToDoAction = function changeTextToDoAction(changeTextToDo, id) {
+  return {
+    type: "CHANGE_TEXT_TODO",
+    payload: {
+      changeTextToDo: changeTextToDo,
+      id: id
+    }
+  };
+};
+
+exports.changeTextToDoAction = changeTextToDoAction;
 },{}],"component/InputTodo/index.js":[function(require,module,exports) {
 "use strict";
 
@@ -35400,9 +35412,9 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
@@ -35414,23 +35426,59 @@ function (_React$Component) {
   _inherits(Item, _React$Component);
 
   function Item(props) {
+    var _this;
+
     _classCallCheck(this, Item);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(Item).call(this, props));
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(Item).call(this, props));
+    _this.state = {
+      isEdit: false
+    };
+    _this.editTextToDo = _this.editTextToDo.bind(_assertThisInitialized(_this));
+    _this.togleEdit = _this.togleEdit.bind(_assertThisInitialized(_this));
+    _this.onKeyDown = _this.onKeyDown.bind(_assertThisInitialized(_this));
+    return _this;
   }
 
   _createClass(Item, [{
+    key: "editTextToDo",
+    value: function editTextToDo(event) {
+      return this.props.changeTextToDoAction(event.target.value, this.props.todo.id);
+    }
+  }, {
+    key: "togleEdit",
+    value: function togleEdit() {
+      return this.setState({
+        isEdit: !this.state.isEdit
+      });
+    }
+  }, {
+    key: "onKeyDown",
+    value: function onKeyDown(event) {
+      if (event.keyCode === 13) {
+        this.setState({
+          isEdit: !this.state.isEdit
+        });
+      }
+    }
+  }, {
     key: "render",
     value: function render() {
-      // console.log("this.props",this.props)
+      console.log("todo", this.props.todo);
       return _react.default.createElement("div", {
         className: "item"
-      }, _react.default.createElement("span", {
-        className: "item__text"
-      }, this.props.textTodo), _react.default.createElement("input", {
+      }, this.state.isEdit && _react.default.createElement("input", {
+        className: "item__input",
+        value: this.props.todo.textTodo,
+        onChange: this.editTextToDo,
+        onKeyDown: this.onKeyDown
+      }), !this.state.isEdit && _react.default.createElement("span", {
+        className: "item__text",
+        onClick: this.togleEdit
+      }, this.props.todo.textTodo), _react.default.createElement("input", {
         className: "item__checkbox",
         type: "checkbox",
-        defaultChecked: this.props.isDone
+        defaultChecked: this.props.todo.isDone
       }));
     }
   }]);
@@ -35454,22 +35502,28 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _redux = require("redux");
+
+var _reactRedux = require("react-redux");
+
 var _Item = _interopRequireDefault(require("./Item"));
 
 require("./Item-style");
 
+var _actions = require("../../actions");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// import { bindActionCreators } from 'redux';
-// import { connect } from 'react-redux';
-// import {
-// } from '../../actions';
-// const mapDispatchToProps = dispatch => bindActionCreators ({
-//     addTodoAction
-// },dispatch);
-var _default = _Item.default;
+var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+  return (0, _redux.bindActionCreators)({
+    changeTextToDoAction: _actions.changeTextToDoAction
+  }, dispatch);
+};
+
+var _default = (0, _reactRedux.connect)(null, mapDispatchToProps)(_Item.default);
+
 exports.default = _default;
-},{"./Item":"component/Item/Item.jsx","./Item-style":"component/Item/Item-style.css"}],"component/ListItem/list-item.css":[function(require,module,exports) {
+},{"redux":"node_modules/redux/es/redux.js","react-redux":"node_modules/react-redux/es/index.js","./Item":"component/Item/Item.jsx","./Item-style":"component/Item/Item-style.css","../../actions":"actions/index.js"}],"component/ListItem/list-item.css":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
@@ -35496,8 +35550,7 @@ var ListItem = function ListItem(_ref) {
     className: "list-item"
   }, todos.map(function (elem) {
     return _react.default.createElement(_Item.default, {
-      textTodo: elem.textTodo,
-      isDone: elem.isDone,
+      todo: elem,
       key: elem.id
     });
   }));
@@ -35603,6 +35656,16 @@ var todoReducer = function todoReducer() {
     return state.concat(_objectSpread({}, payload));
   }
 
+  if (type === "CHANGE_TEXT_TODO") {
+    return state.map(function (todo) {
+      if (todo.id === payload.id) {
+        return _objectSpread({}, todo, {
+          textTodo: payload.changeTextToDo
+        });
+      }
+    });
+  }
+
   return state;
 };
 
@@ -35676,7 +35739,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60432" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54731" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -13,8 +13,7 @@ const ListItem = ({
                 todos.map((elem) => {
                 return (
                     <Item 
-                    textTodo={elem.textTodo}
-                    isDone={elem.isDone}
+                    todo={elem}
                     key={elem.id}
                     />
                 )

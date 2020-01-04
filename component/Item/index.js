@@ -1,14 +1,14 @@
-// import { bindActionCreators } from 'redux';
-// import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
 import Item from './Item';
 import './Item-style';
-// import {
+import {
+    changeTextToDoAction
+} from '../../actions';
 
-// } from '../../actions';
+const mapDispatchToProps = dispatch => bindActionCreators ({
+    changeTextToDoAction
+},dispatch);
 
-// const mapDispatchToProps = dispatch => bindActionCreators ({
-//     addTodoAction
-// },dispatch);
-
-export default Item;
+export default connect(null, mapDispatchToProps)(Item);

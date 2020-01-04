@@ -7,6 +7,18 @@ export const todoReducer = (state = [], { type, payload }) => {
             ...payload
         })
     }
+
+    if (type === "CHANGE_TEXT_TODO") {
+        return state.map((todo) => {
+
+            if(todo.id === payload.id) {
+                return{
+                    ...todo,
+                    textTodo: payload.changeTextToDo,
+                }
+            }
+        })
+    }
     
     return state;
 }

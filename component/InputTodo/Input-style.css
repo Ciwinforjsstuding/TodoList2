@@ -19,6 +19,10 @@
     outline: none;
 }
 
+.input__todo::placeholder {
+    color: rgb(0, 0, 0);
+}
+
 .input__btn{
     border: 0px;
     background: #000;

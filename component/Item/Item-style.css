@@ -1,6 +1,7 @@
 .item{
     display: flex;
     justify-content: space-around;
+    align-items: center;
     width: 60%;
     padding: 15px 0px;
     margin: 20px 0px;
@@ -14,6 +15,17 @@
     display: flex;
     justify-content: center;
     flex-basis: 80%;
+}
+
+.item__input{
+    flex-basis: 70%;
+    border-top: 0px;
+    border-right: 0px;
+    border-left: 0px;
+    border-bottom: 2px solid rgb(17, 17, 17);
+    color: aliceblue;
+    background: #000;
+    outline: none;
 }
 
 .item__checkbox{
